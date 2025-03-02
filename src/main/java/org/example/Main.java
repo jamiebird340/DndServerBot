@@ -6,6 +6,8 @@ import org.apache.commons.cli.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.example.DndServerBot.*;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -35,7 +37,7 @@ public class Main {
             }
 
             // If it passes through everything, it starts the bot and sends the token to our second class.
-            DndServerBot.selfBot = new DndServerBot(token);
+            selfBot = new DndServerBot(token);
         } catch (ParseException e) {
             LoggerManager.logError(e.getMessage());
             formatter.printHelp("", options);

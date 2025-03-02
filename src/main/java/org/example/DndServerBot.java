@@ -4,8 +4,6 @@ import lombok.Getter;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 
-import javax.security.auth.login.LoginException;
-
 @Getter
 public class DndServerBot {
 
@@ -14,15 +12,10 @@ public class DndServerBot {
     ShardManager shardManager = null;
 
     public DndServerBot(String token) {
-        try {
-            shardManager = buildShardManager(token);
-        } catch (LoginException e) {
-            System.exit(0);
-        }
+        shardManager = buildShardManager(token);
     }
 
-    private ShardManager buildShardManager(String token) throws LoginException {
-        // It is often better to load your token in from an external file or environment variable, especially if you plan on publishing the source code.
+    private ShardManager buildShardManager(String token) {
         DefaultShardManagerBuilder builder =
                 DefaultShardManagerBuilder.createDefault(token);
 

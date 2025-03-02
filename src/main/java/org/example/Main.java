@@ -3,45 +3,63 @@ package org.example;
 import loggers.LoggerManager;
 import org.apache.commons.cli.*;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import static org.example.DndServerBot.*;
 
 public class Main {
 
+    private static final String HELP_OPTION = "help";
+    private static final String TOKEN_OPTION = "token";
+
     public static void main(String[] args) {
+        Options options = defineOptions();
+        CommandLine cmd = parseCommandLine(args, options);
+
+        if (cmd == null) return; // Parsing failed, handled in `parseCommandLine`
+
+        if (cmd.hasOption(HELP_OPTION)) {
+            printHelp(options);
+            return;
+        }
+
+        String token = cmd.getOptionValue(TOKEN_OPTION);
+
+        if (token == null || token.isBlank()) {
+            LoggerManager.logError("ERROR: No token provided. Use -t or --token to provide a valid token.");
+            printHelp(options);
+            return;
+        }
+
+        startBot(token);
+    }
+
+    private static Options defineOptions() {
         Options options = new Options();
+        options.addOption("h", HELP_OPTION, false, "Displays this help menu.");
+        options.addOption("t", TOKEN_OPTION, true, "Provide the token during startup.");
+        return options;
+    }
 
-        options.addOption(new Option("h", "help", false, "Displays this help menu."));
-        options.addOption(new Option("t", "token", true, "Provide the token during startup."));
-
+    private static CommandLine parseCommandLine(String[] args, Options options) {
         CommandLineParser parser = new DefaultParser();
-        HelpFormatter formatter = new HelpFormatter();
-
         try {
-            CommandLine cmd = parser.parse(options, args);
-
-            // Check if the help argument was provided.
-            if (cmd.hasOption("help")) {
-                formatter.printHelp("Help Menu", options);
-                System.exit(0);
-            }
-
-            // Check if the token argument was provided and has a value. If it doesn't, return null.
-            String token = cmd.hasOption("token") ? cmd.getOptionValue("token") : null;
-            if (token == null) {
-                LoggerManager.logError("ERROR: No token provided, please provide a token using the -t or --token flag.");
-                formatter.printHelp("", options);
-                System.exit(0);
-            }
-
-            // If it passes through everything, it starts the bot and sends the token to our second class.
-            selfBot = new DndServerBot(token);
+            return parser.parse(options, args);
         } catch (ParseException e) {
-            LoggerManager.logError(e.getMessage());
-            formatter.printHelp("", options);
-            System.exit(0);
+            LoggerManager.logError("Command-line parsing error: " + e.getMessage());
+            printHelp(options);
+            return null;
+        }
+    }
+
+    private static void printHelp(Options options) {
+        new HelpFormatter().printHelp("Usage:", options);
+    }
+
+    private static void startBot(String token) {
+        try {
+            selfBot = new DndServerBot(token);
+            LoggerManager.logInfo("Bot started successfully.");
+        } catch (Exception e) {
+            LoggerManager.logError("Failed to start bot: " + e.getMessage());
         }
     }
 }

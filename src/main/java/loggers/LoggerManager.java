@@ -16,4 +16,8 @@ public class LoggerManager {
     public static void logError(String message) {
         getLOGGER().log(Level.SEVERE, message);
     }
+
+    public static void logInfo(String message) {
+        getLOGGER().log(Level.INFO, message);
+    }
 }

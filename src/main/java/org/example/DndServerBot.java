@@ -18,7 +18,6 @@ public class DndServerBot {
         } catch (LoginException e) {
             System.exit(0);
         }
-//        MTM0NTczMjU0NjE3MTc2ODkyMg.GvloVd.IQSIO1ogRnLeL9hgEVMUc4iuXSaKpsNullIzIQ
     }
 
     private ShardManager buildShardManager(String token) throws LoginException {

@@ -1,10 +1,12 @@
 package org.example;
 
+import lombok.Getter;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 
 import javax.security.auth.login.LoginException;
 
+@Getter
 public class DndServerBot {
 
     public static DndServerBot selfBot;
@@ -27,7 +29,4 @@ public class DndServerBot {
         return builder.build();
     }
 
-    public ShardManager getShardManager() {
-        return shardManager;
-    }
 }
